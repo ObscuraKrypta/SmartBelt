@@ -40,7 +40,7 @@ Edge Detection (Canny): Detects edges in the image.
 
 Hough Line Transform: Identifies straight lines.
 
-⚡ Experimentation
+Experimentation
 
 Try different images by replacing 'msg1033807294-27153.jpg' with your own image.
 
