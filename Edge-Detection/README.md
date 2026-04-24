@@ -83,7 +83,7 @@ yolo task=detect mode=predict model=runs/train/exp/weights/best.pt source=test_i
 
  ## Acknowledgments:
 
- Special thanks to Professor Daniel Goldmann and the IFAD Institute for their cooperation and support in providing access to the eddy current machine. We also sincerely appreciate the valuable assistance of technicians Jean-Marie Dornbusch and Olaf Tschenscher.
+ Special thanks to Professor Daniel Goldmann, Professor Benjamin Leiding and the IFAD Institute for their cooperation and support in providing access to the eddy current machine. We also sincerely appreciate the valuable assistance of technicians Jean-Marie Dornbusch and Olaf Tschenscher.
 
 
  ##  Contact:
