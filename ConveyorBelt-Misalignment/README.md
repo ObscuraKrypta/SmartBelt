@@ -1,60 +1,215 @@
-Line Detection using OpenCV
+# Smart Conveyor Belt Misalignment Detection & Correction System
 
-Overview
+## Overview
 
-This project demonstrates how to detect lines in an image using OpenCV and NumPy in Python. The Jupyter Notebook processes an image step by step, including grayscale conversion, region-of-interest cropping, Gaussian Blur, edge detection with Canny, and line detection using the Hough Transform.
+This project presents a **real-time conveyor belt misalignment detection and correction system** using **computer vision (OpenCV)** and **embedded control (Raspberry Pi + stepper motors)**.
 
-Required Libraries
+In industrial environments, conveyor belts may drift to the **left or right**, causing inefficiency or potential damage.
+This system automatically:
 
-Make sure you have the necessary libraries installed before running the notebook. You can install them using:
+1. **Detects belt edges using vision**
+2. **Identifies misalignment**
+3. **Corrects the position using stepper motors**
 
-pip install opencv-python matplotlib numpy
+---
 
-Files
+##  How It Works
 
-LineDetection.ipynb → Jupyter Notebook containing the line detection steps.
+###  Detection Pipeline
 
-msg1033807294-27153.jpg → Example image used in the notebook.
+* A **Raspberry Pi camera** is mounted above the conveyor belt
+* White edge lines are placed on both sides of the belt
+* The system uses:
 
-How to Run
+  * Grayscale conversion
+  * Gaussian blur
+  * Canny edge detection
+  * Hough Line Transform
 
-Open a terminal and navigate to the directory containing this project.
+to detect **left and right belt edges**
 
-Launch Jupyter Notebook:
+---
 
+###  Decision Logic
+
+*  Both lines detected → Belt is centered → Do nothing
+*  Right line missing → Belt shifted right → Move belt left
+*  Left line missing → Belt shifted left → Move belt right
+
+---
+
+###  Actuation System
+
+* Two **stepper motors** are installed:
+
+  * Left motor
+  * Right motor
+* Controlled via **GPIO pins**
+* Automatically activated based on misalignment detection
+
+---
+
+##  Features
+
+* Real-time misalignment detection
+* Automatic correction using stepper motors
+* Lightweight and deployable on Raspberry Pi
+* Robust edge detection using OpenCV
+* Works in real industrial scenarios
+
+---
+
+##  Project Structure
+
+```id="6mnjrv"
+ConveyorBelt-Misalignment/
+│
+├── Dataset/                 # Sample dataset
+├── Images/                  # Input images
+├── Results/                 # Output results (visualizations/videos)
+├── LineDetection.ipynb      # Development & testing notebook
+├── final_test.py            # Real-time detection + motor control
+└── README.md
+```
+
+---
+
+##  Hardware Requirements
+
+### Minimum Setup:
+
+* Raspberry Pi (recommended: Raspberry Pi 4)
+* Raspberry Pi Camera Module (or USB camera)
+
+### Additional Components:
+
+* 2 × Stepper Motors
+* Motor Driver (e.g., A4988 / L298N)
+* Power Supply (suitable for motors)
+* Conveyor belt system
+
+---
+
+##  Software Requirements
+
+* Python 3.8+
+* Raspberry Pi OS (recommended)
+* OpenCV
+* NumPy
+* Matplotlib
+* Picamera2
+* RPi.GPIO
+* pygame
+
+---
+
+##  Installation
+
+Install dependencies:
+
+```bash id="4ub9m2"
+pip install opencv-python numpy matplotlib pygame
+```
+
+On Raspberry Pi:
+
+```bash id="4z7wkj"
+pip install picamera2 RPi.GPIO
+```
+
+---
+
+##  Detection Algorithm
+
+The system uses:
+
+* **Region of Interest (ROI)** to focus on belt area
+* **Canny Edge Detection** for edge extraction
+* **Hough Transform** for line detection
+
+Example:
+
+```python id="h6kq5q"
+canny_image = cv2.Canny(blurred, 170, 240)
+lines = cv2.HoughLinesP(canny_image, 1, np.pi/180, threshold=100)
+```
+
+---
+
+##  Running the System
+
+### 1. Run Notebook (for testing)
+
+```bash id="n0q1xt"
 jupyter notebook LineDetection.ipynb
+```
 
-Run each cell in order to see the image processing and line detection steps.
+---
 
-Steps in the Notebook
+### 2. Run Real-Time System
 
-Read the Image: Load an image using OpenCV.
+```bash id="r9zq2k"
+python final_test.py
+```
 
-Convert to Grayscale: Simplifies processing.
+---
 
-Define Region of Interest (ROI): Focus on a specific part of the image.
+##  Motor Control Logic
 
-Apply Gaussian Blur: Reduces noise.
+* If **right edge is missing** → activate **right motor**
+* If **left edge is missing** → activate **left motor**
+* Motors stop when both edges are detected again
 
-Edge Detection (Canny): Detects edges in the image.
+---
 
-Hough Line Transform: Identifies straight lines.
+##  Output
 
-Experimentation
+* Real-time annotated video
+* Detection overlay (left/right status)
+* Saved output video (`output.avi`)
 
-Try different images by replacing 'msg1033807294-27153.jpg' with your own image.
+---
 
-Adjust the Canny edge detection parameters for better results.
+##  Results
 
-Modify the ROI selection to focus on different areas.
+* Reliable detection of belt edges
+* Accurate correction in real-time
+* Performance depends on:
 
-Example Output
+  * Lighting conditions
+  * Camera placement
+  * Line visibility
 
-The notebook visualizes each step with matplotlib, showing the processed images at different stages.
+---
 
-References
+##  Important Notes
 
-OpenCV Documentation
+* Ensure good lighting for accurate detection
+* Adjust ROI based on camera position
+* Tune Canny thresholds depending on environment
+* Motor speed should be calibrated carefully
 
-NumPy Documentation
+---
 
+##  Future Improvements
+
+* PID control for smoother correction
+* Deep learning-based detection (YOLO)
+* Multi-camera system
+* Industrial-grade robustness
+
+---
+
+##  Contact
+
+For questions or collaboration:
+
+📧 [shohreh.kia@tu-clausthal.de](mailto:shohreh.kia@tu-clausthal.de)
+📧 [shohreh.kia77@gmail.com](mailto:shohreh.kia77@gmail.com)
+
+
+---
+
+##  License
+
+This project is open-source. Please contact for industrial usage.
